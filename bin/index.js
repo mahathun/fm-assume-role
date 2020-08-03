@@ -2,13 +2,15 @@
 const AWS  = require('aws-sdk');
 var exec = require('child_process').exec;
 var fs = require('fs');
+var pjson = require('./../package.json');
+// console.log(pjson.version);
 
 
 var argv = require('minimist')(process.argv.slice(2));
 const clipboardy = require('clipboardy');
 
 
-const {role_arn, sessionname, duration, verbouse, role, accountnumber, bashcommand="", profile} = argv
+const {role_arn, sessionname, duration, verbouse, role, accountnumber, bashcommand="", profile, v} = argv
 
 
 
@@ -27,16 +29,11 @@ const runAssumeRole = async(credentials = {})=>{
       };
     
     
-    console.log('test1')
     const data1 = await sts.assumeRole(roleToAssume, async (err,data)=>{
-        console.log('test-2')
         if(err){
             console.log('error', err)
             return err
         }
-            
-        
-        console.log('test3')
     
         if(bashcommand){
             process.env['AWS_ACCESS_KEY_ID'] = `${data.Credentials.AccessKeyId}`
@@ -81,6 +78,10 @@ const runAssumeRole = async(credentials = {})=>{
 
 // const sharedCredentials = (profile)?new AWS.SharedIniFileCredentials({profile}): null;
 
+if(v){
+    console.log(`${pjson.name}\nVersion: ${pjson.version}`)
+    return
+}
 
 let credentials = null;
 if(profile){
