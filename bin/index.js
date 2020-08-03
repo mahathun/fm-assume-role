@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const AWS  = require('aws-sdk');
 var exec = require('child_process').exec;
 var fs = require('fs');
@@ -9,9 +10,12 @@ const clipboardy = require('clipboardy');
 
 const {role_arn, sessionname, duration, verbouse, role, accountnumber, bashcommand="", profile} = argv
 
-const sts = new AWS.STS()
 
-const runAssumeRole = (credentials = {})=>{
+
+const runAssumeRole = async(credentials = {})=>{
+    
+    const sts = new AWS.STS()
+
     if(!(role_arn || accountnumber || credentials.account_number || credentials.role_arn)){
         console.log('--role_arn or --accountnumber flags are required if the aws profile hasnt been specified or doesnt contain role_arn or account_number in ther.')
         return
@@ -19,15 +23,20 @@ const runAssumeRole = (credentials = {})=>{
     
     var roleToAssume = {
         RoleArn: role_arn || credentials.role_arn || `arn:aws:iam::${credentials.account_number}:role/${role || "temporary_access_to_devs"}` || `arn:aws:iam::${accountnumber}:role/${role || "temporary_access_to_devs"}`,
-        RoleSessionName: sessionname || "Temp Access"//'dan@QA',
+        RoleSessionName: sessionname || "TempAccess"//'dan@QA',
       };
     
     
-    
-    const data1 = sts.assumeRole(roleToAssume, async (err,data)=>{
-        if(err)
+    console.log('test1')
+    const data1 = await sts.assumeRole(roleToAssume, async (err,data)=>{
+        console.log('test-2')
+        if(err){
+            console.log('error', err)
             return err
+        }
+            
         
+        console.log('test3')
     
         if(bashcommand){
             process.env['AWS_ACCESS_KEY_ID'] = `${data.Credentials.AccessKeyId}`
@@ -78,7 +87,8 @@ if(profile){
     const profiles = new Map();
     fs.readFile(process.env.HOME+'/.aws/credentials', {encoding: 'utf8'}, async (err, contents)=> {
         if(err)
-            // console.log('err',err)
+            console.log('err',err)
+
         let profileData = contents.split("\n\n");
 
         await profileData.map((profile,i)=>{
@@ -94,7 +104,7 @@ if(profile){
                 
                 let lineData = line.split('=');
                 if(lineData.length>1){
-                    console.log('lineData', lineData)
+                    // console.log('lineData', lineData)
 
                     profileData[lineData[0].trim()] = lineData[1].trim()
                 }
@@ -113,12 +123,12 @@ if(profile){
         credentials = profiles.get(profile)
         // console.log('credentials', credentials)
 
-        runAssumeRole(credentials);
+        return runAssumeRole(credentials);
     });
 
 }else{
     //dont have a profile
-    runAssumeRole();
+    return runAssumeRole();
 
 }
 
