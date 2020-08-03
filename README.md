@@ -46,7 +46,7 @@ e.g.
 
 
 ### Note
-If you avoid the `--bashcommand` flag and tool will only copy the new access details onto your clipboard, then you can past it on any terminal window and get access for that bash window. all subsequent aws calls will on that bash window will use the new credentials(until the token expires)
+>If you avoid the `--bashcommand` flag and tool will only copy the new access details onto your clipboard, then you can past it on any terminal window and get access for that bash window. all subsequent aws calls will on that bash window will use the new credentials(until the token expires)
 
 
 ## Available Options
