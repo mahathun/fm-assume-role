@@ -10,13 +10,14 @@ var argv = require('minimist')(process.argv.slice(2));
 const clipboardy = require('clipboardy');
 
 
-const {role_arn, sessionname, duration, verbouse, role, accountnumber, bashcommand="", profile, v} = argv
+const {role_arn, sessionname, duration, verbouse, role, accountnumber, bashcommand="", profile, v, dont_use_default_profile, h} = argv
 
-
-
-const runAssumeRole = async(credentials = {})=>{
-    
-    const sts = new AWS.STS()
+const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=>{
+    const sts = (defaultProfileCredentials)?new AWS.STS({credentials: {
+        accessKeyId: defaultProfileCredentials.aws_access_key_id,
+        secretAccessKey : defaultProfileCredentials.aws_secret_access_key,
+        region: defaultProfileCredentials.region,
+    }}): new AWS.STS()
 
     if(!(role_arn || accountnumber || credentials.account_number || credentials.role_arn)){
         console.log('--role_arn or --accountnumber flags are required if the aws profile hasnt been specified or doesnt contain role_arn or account_number in ther.')
@@ -77,7 +78,22 @@ const runAssumeRole = async(credentials = {})=>{
 
 
 // const sharedCredentials = (profile)?new AWS.SharedIniFileCredentials({profile}): null;
-
+if(h){
+    console.log(`${pjson.name}\nVersion: ${pjson.version}`)
+    console.log(`\t--role_arn\n\t\trole_arn which going to be assumed`)
+    console.log(`\t--sessionname\n\t\tremote session name`)
+    console.log(`\t--duration\n\t\tduration of the temporary tokens`)
+    console.log(`\t--verbouse\n\t\tprintout the temporary credentials to the terminal`)
+    console.log(`\t--role\n\t\trole name which will be assuming, default is temporary_access_to_devs`)
+    console.log(`\t--accountnumber\n\t\taccount number of the account having the role to be assumed`)
+    console.log(`\t--bashcommand\n\t\tbash command needed to run`)
+    console.log(`\t--profile\n\t\taws config profile name`)
+    console.log(`\t--dont_use_default_profile\n\t\tuse to use the aws credentials of the current terminal instead of default profile`)
+    console.log(`\t--v\n\t\tprint out the fm-assume-role version`)
+    console.log(`\t--h\n\t\thelp`)
+    
+    return;
+}
 if(v){
     console.log(`${pjson.name}\nVersion: ${pjson.version}`)
     return
@@ -96,7 +112,7 @@ if(profile){
             // console.log('profile', profile)
 
             let profileName = profile.match(/(?<=\[).+?(?=\])/g);
-            let profileData= {"test" : "test"}
+            let profileData= {}
             profile.replace(/\[(.*?)\]/g, '')
 
             let profileDataArray = profile.split('\n');
@@ -122,9 +138,12 @@ if(profile){
         // console.log(contents.split("\n\n"));
 
         credentials = profiles.get(profile)
-        // console.log('credentials', credentials)
+        let defaultProfileCredentials = profiles.get('default')
+        // let config = new AWS.Config();
+        // config.update(defaultProfileCredentials)
+        console.log('dont_use_default_profile', dont_use_default_profile)
 
-        return runAssumeRole(credentials);
+        return (dont_use_default_profile)?runAssumeRole(credentials): runAssumeRole(credentials, defaultProfileCredentials);
     });
 
 }else{
