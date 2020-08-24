@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 const AWS  = require('aws-sdk');
-var exec = require('child_process').exec;
-var fs = require('fs');
-var pjson = require('./../package.json');
-// console.log(pjson.version);
-
-
-var argv = require('minimist')(process.argv.slice(2));
+const exec = require('child_process').exec;
+const fs = require('fs');
+const pjson = require('./../package.json');
+const argv = require('minimist')(process.argv.slice(2));
 const clipboardy = require('clipboardy');
 
 
@@ -26,7 +23,7 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
     
     var roleToAssume = {
         RoleArn: role_arn || credentials.role_arn || `arn:aws:iam::${credentials.account_number}:role/${role || "temporary_access_to_devs"}` || `arn:aws:iam::${accountnumber}:role/${role || "temporary_access_to_devs"}`,
-        RoleSessionName: sessionname || "TempAccess"//'dan@QA',
+        RoleSessionName: sessionname || "TempAccess"//'mahathun@QA',
       };
     
     
@@ -77,7 +74,6 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
 }
 
 
-// const sharedCredentials = (profile)?new AWS.SharedIniFileCredentials({profile}): null;
 if(h){
     console.log(`${pjson.name}\nVersion: ${pjson.version}`)
     console.log(`\t--role_arn\n\t\trole_arn which going to be assumed`)
@@ -109,7 +105,6 @@ if(profile){
         let profileData = contents.split("\n\n");
 
         await profileData.map((profile,i)=>{
-            // console.log('profile', profile)
 
             let profileName = profile.match(/(?<=\[).+?(?=\])/g);
             let profileData= {}
@@ -121,26 +116,19 @@ if(profile){
                 
                 let lineData = line.split('=');
                 if(lineData.length>1){
-                    // console.log('lineData', lineData)
-
                     profileData[lineData[0].trim()] = lineData[1].trim()
                 }
             
             })
 
-            // console.log('profileName', profileName)
-            // console.log('profileData', profileData)
-
             profiles.set(profileName[0], profileData)
 
-            // console.log(profiles.keys())
         })
-        // console.log(contents.split("\n\n"));
+
 
         credentials = profiles.get(profile)
         let defaultProfileCredentials = profiles.get('default')
-        // let config = new AWS.Config();
-        // config.update(defaultProfileCredentials)
+
         console.log('dont_use_default_profile', dont_use_default_profile)
 
         return (dont_use_default_profile)?runAssumeRole(credentials): runAssumeRole(credentials, defaultProfileCredentials);

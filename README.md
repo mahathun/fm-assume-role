@@ -1,6 +1,6 @@
 # FM ASSUME ROLE
 
-This module makes a life a bit easier when working with AWS assume roles by adding an oneline cli-interface to automatically allowing temporary credentials to work when doing deployment etc.
+This module makes a life a bit easier when working with AWS assume roles by adding an one line cli-interface to automatically allowing temporary credentials to work when doing deployment etc.
 
 
 ### To Install (globally)
@@ -62,3 +62,6 @@ fm-assume-role
     --profile
 
 ```
+
+
+>If you come across with any issues, please open a issue in the github repo with the details of the issue.(including which operating system you are using)
