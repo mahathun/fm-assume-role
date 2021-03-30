@@ -1,15 +1,46 @@
 #!/usr/bin/env node
+const boxen = require('boxen');
+const chalk = require('chalk');
+const semver = require('semver');
+const pkgJson = require('package-json');
+const semverDiff = require('semver-diff');
 const AWS  = require('aws-sdk');
 const exec = require('child_process').exec;
 const fs = require('fs');
 const pjson = require('./../package.json');
 const argv = require('minimist')(process.argv.slice(2), {string: "accountnumber"});
 const clipboardy = require('clipboardy');
-const updateNotifier = require('update-notifier');
 const pkg = require('../package.json')
 
+const name = pkg['name']
+const version = pkg['version']
 
-updateNotifier({pkg}).notify();
+const checkUpdate = async () => {
+  const { version: latestVersion } = await pkgJson(name);
+
+  // check if local package version is less than the remote version
+  const updateAvailable = semver.lt(version, `${latestVersion}`);
+
+  if (updateAvailable) {
+    // check the type of version difference which is usually patch, minor, major etc.
+    let verDiff = semverDiff(version, `${latestVersion}`);
+
+    const msg = {
+      updateAvailable: `${verDiff} update available ${chalk.dim(version)} → ${chalk.green(latestVersion)}`,
+      runUpdate: `Run ${chalk.cyan(`npm i -g ${name}`)} to update`,
+      extra: `${chalk.magenta.bold(`You know what to do if you found any issues, don't you?\n please submit a a bug here https://github.com/mahathun/fm-assume-role/issues/new with your Operating System`)}`,
+    };
+
+    // notify the user about the available udpate
+    console.log(boxen(`${msg.updateAvailable}\n${msg.runUpdate}\n\n${msg.extra}`, {
+      margin: 1,
+      padding: 1,
+      align: 'center',
+    }));
+  }
+};
+
+checkUpdate();
 
 const {role_arn, sessionname, duration, verbouse, role, accountnumber, bashcommand="", profile, v, dont_use_default_profile, h} = argv
 
