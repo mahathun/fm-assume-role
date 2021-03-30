@@ -5,7 +5,11 @@ const fs = require('fs');
 const pjson = require('./../package.json');
 const argv = require('minimist')(process.argv.slice(2), {string: "accountnumber"});
 const clipboardy = require('clipboardy');
+const updateNotifier = require('update-notifier');
+const pkg = require('../package.json')
 
+
+updateNotifier({pkg}).notify();
 
 const {role_arn, sessionname, duration, verbouse, role, accountnumber, bashcommand="", profile, v, dont_use_default_profile, h} = argv
 
