@@ -3,7 +3,7 @@ const AWS  = require('aws-sdk');
 const exec = require('child_process').exec;
 const fs = require('fs');
 const pjson = require('./../package.json');
-const argv = require('minimist')(process.argv.slice(2));
+const argv = require('minimist')(process.argv.slice(2), {string: "accountnumber"});
 const clipboardy = require('clipboardy');
 
 
@@ -23,7 +23,7 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
 
     
     var roleToAssume = {
-        RoleArn: role_arn || credentials.role_arn || `arn:aws:iam::${credentials.account_number || accountnumber}:role/${role || "temporary_access_to_devs"}` || `arn:aws:iam::${accountnumber}:role/${role || "temporary_access_to_devs"}`,
+        RoleArn: role_arn || credentials.role_arn || `arn:aws:iam::${credentials.account_number || `${accountnumber}`}:role/${role || "temporary_access_to_devs"}` || `arn:aws:iam::${accountnumber}:role/${role || "temporary_access_to_devs"}`,
         RoleSessionName: sessionname || "TempAccess"//'mahathun@QA',
       };
     
