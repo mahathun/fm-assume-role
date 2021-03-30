@@ -98,11 +98,15 @@ if(v){
 let credentials = null;
 if(profile){
     const profiles = new Map();
+    
+    const operatingSystem = process.platform;
+    const seperator = (operatingSystem=="win32")? '\r\n': '\n';
+
     fs.readFile(process.env.HOME+'/.aws/credentials', {encoding: 'utf8'}, async (err, contents)=> {
         if(err)
             console.log('err',err)
 
-        let profileData = contents.split("\n\n");
+        let profileData = contents.split(`${seperator}${seperator}`);
 
         await profileData.map((profile,i)=>{
 
@@ -110,7 +114,7 @@ if(profile){
             let profileData= {}
             profile.replace(/\[(.*?)\]/g, '')
 
-            let profileDataArray = profile.split('\n');
+            let profileDataArray = profile.split(`${seperator}`);
 
             profileDataArray.map((line, j)=>{
                 
@@ -121,7 +125,9 @@ if(profile){
             
             })
 
-            profiles.set(profileName[0], profileData)
+            if(profileName){
+                profiles.set(profileName[0], profileData)
+            }
 
         })
 
