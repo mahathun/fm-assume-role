@@ -20,9 +20,10 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
         console.log('--role_arn or --accountnumber flags are required if the aws profile hasnt been specified or doesnt contain role_arn or account_number in ther.')
         return
     }
+
     
     var roleToAssume = {
-        RoleArn: role_arn || credentials.role_arn || `arn:aws:iam::${credentials.account_number}:role/${role || "temporary_access_to_devs"}` || `arn:aws:iam::${accountnumber}:role/${role || "temporary_access_to_devs"}`,
+        RoleArn: role_arn || credentials.role_arn || `arn:aws:iam::${credentials.account_number || accountnumber}:role/${role || "temporary_access_to_devs"}` || `arn:aws:iam::${accountnumber}:role/${role || "temporary_access_to_devs"}`,
         RoleSessionName: sessionname || "TempAccess"//'mahathun@QA',
       };
     
