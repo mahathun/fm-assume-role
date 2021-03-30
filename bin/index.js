@@ -21,7 +21,8 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
     }}): new AWS.STS()
 
     if(!(role_arn || accountnumber || credentials.account_number || credentials.role_arn)){
-        console.log('--role_arn or --accountnumber flags are required if the aws profile hasnt been specified or doesnt contain role_arn or account_number in ther.')
+        console.log('--role_arn or --accountnumber flags are required if the aws profile hasnt been specified or doesnt contain role_arn or account_number in there.')
+        console.log("if you think this is a bug, please add an issue in the github repo")
         return
     }
 
@@ -35,6 +36,7 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
     const data1 = await sts.assumeRole(roleToAssume, async (err,data)=>{
         if(err){
             console.log('error', err)
+            console.log("if you think this is a bug, please add an issue in the github repo")
             return err
         }
     
@@ -47,10 +49,12 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
             await exec(`${bashcommand}`,(err,output, outputerr)=>{
                 if (err) {
                     console.log(`error: ${err.message}`);
+                    console.log("if you think this is a bug, please add an issue in the github repo")
                     return;
                 }
                 if (outputerr) {
                     console.log(`stderr: ${outputerr}`);
+                    console.log("if you think this is a bug, please add an issue in the github repo")
                     return;
                 }
                 console.log(`output: ${output}`);
@@ -59,7 +63,7 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
             console.log("Access credentials have also been copied to your clipboard.");
     
             if(verbouse){
-                console.log("if any issues manually COPY this and run to update the environement variables")
+                console.log("if any issues manually COPY this and run to update the environment variables")
                 console.log(`export AWS_ACCESS_KEY_ID=${data.Credentials.AccessKeyId}; export AWS_SECRET_ACCESS_KEY=${data.Credentials.SecretAccessKey}; export AWS_SESSION_TOKEN=${data.Credentials.SessionToken}`)
             }else{
                 clipboardy.writeSync(`export AWS_ACCESS_KEY_ID=${data.Credentials.AccessKeyId}; export AWS_SECRET_ACCESS_KEY=${data.Credentials.SecretAccessKey}; export AWS_SESSION_TOKEN=${data.Credentials.SessionToken}`);
@@ -67,7 +71,7 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
         }else{
             console.log("Just paste and press enter");
             if(verbouse){
-                console.log("if any issues manually COPY this and run to update the environement variables")
+                console.log("if any issues manually COPY this and run to update the environment variables")
                 console.log(`export AWS_ACCESS_KEY_ID=${data.Credentials.AccessKeyId}; export AWS_SECRET_ACCESS_KEY=${data.Credentials.SecretAccessKey}; export AWS_SESSION_TOKEN=${data.Credentials.SessionToken}`)
             }else{
                 clipboardy.writeSync(`export AWS_ACCESS_KEY_ID=${data.Credentials.AccessKeyId}; export AWS_SECRET_ACCESS_KEY=${data.Credentials.SecretAccessKey}; export AWS_SESSION_TOKEN=${data.Credentials.SessionToken}`);
@@ -107,8 +111,11 @@ if(profile){
     const seperator = (operatingSystem=="win32")? '\r\n': '\n';
 
     fs.readFile(process.env.HOME+'/.aws/credentials', {encoding: 'utf8'}, async (err, contents)=> {
-        if(err)
+        if(err){
             console.log('err',err)
+            console.log("if you think this is a bug, please add an issue in the github repo")
+        }
+            
 
         let profileData = contents.split(`${seperator}${seperator}`);
 
@@ -139,7 +146,11 @@ if(profile){
         credentials = profiles.get(profile)
         let defaultProfileCredentials = profiles.get('default')
 
-        console.log('dont_use_default_profile', dont_use_default_profile)
+        if(dont_use_default_profile){
+            console.log('dont_use_default_profile', dont_use_default_profile)
+            console.log("if you think this is a bug, please add an issue in the github repo")
+        }
+        
 
         return (dont_use_default_profile)?runAssumeRole(credentials): runAssumeRole(credentials, defaultProfileCredentials);
     });
