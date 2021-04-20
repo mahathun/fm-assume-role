@@ -66,9 +66,10 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
     
     const data1 = await sts.assumeRole(roleToAssume, async (err,data)=>{
         if(err){
-            console.log('error', err)
-            console.log("if you think this is a bug, please add an issue in the github repo")
-            return err
+            // console.log('error', err)
+            console.log("\nif you think this is a bug, please add an issue in the github repo\n")
+            throw new Error(err)
+            
         }
     
         if(bashcommand){
@@ -79,25 +80,27 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
         
             await exec(`${bashcommand}`,(err,output, outputerr)=>{
                 if (err) {
-                    console.log(`error: ${err.message}`);
-                    console.log("if you think this is a bug, please add an issue in the github repo")
-                    return;
+                    // console.log(`error: ${err.message}`);
+                    console.log("\nif you think this is a bug, please add an issue in the github repo\n")
+
+                    throw new Error(`${err.message}`)
                 }
                 if (outputerr) {
-                    console.log(`stderr: ${outputerr}`);
-                    console.log("if you think this is a bug, please add an issue in the github repo")
-                    return;
+                    // console.log(`stderr: ${outputerr}`);
+                    console.log("\nif you think this is a bug, please add an issue in the github repo\n")
+
+                    throw new Error(outputerr)
                 }
                 console.log(`output: ${output}`);
         
             }) 
-            console.log("Access credentials have also been copied to your clipboard.");
     
             if(verbouse){
                 console.log("if any issues manually COPY this and run to update the environment variables")
                 console.log(`export AWS_ACCESS_KEY_ID=${data.Credentials.AccessKeyId}; export AWS_SECRET_ACCESS_KEY=${data.Credentials.SecretAccessKey}; export AWS_SESSION_TOKEN=${data.Credentials.SessionToken}`)
             }else{
                 clipboardy.writeSync(`export AWS_ACCESS_KEY_ID=${data.Credentials.AccessKeyId}; export AWS_SECRET_ACCESS_KEY=${data.Credentials.SecretAccessKey}; export AWS_SESSION_TOKEN=${data.Credentials.SessionToken}`);
+                console.log("Access credentials have also been copied to your clipboard.");
             }
         }else{
             console.log("Just paste and press enter");
@@ -143,8 +146,10 @@ if(profile){
 
     fs.readFile(process.env.HOME+'/.aws/credentials', {encoding: 'utf8'}, async (err, contents)=> {
         if(err){
-            console.log('err',err)
-            console.log("if you think this is a bug, please add an issue in the github repo")
+            // console.log('err',err)
+            console.log("\nif you think this is a bug, please add an issue in the github repo\n")
+
+            throw new Error(err)
         }
             
 
@@ -181,6 +186,8 @@ if(profile){
             console.log('dont_use_default_profile', dont_use_default_profile)
             console.log("if you think this is a bug, please add an issue in the github repo")
         }
+
+        
         
 
         return (dont_use_default_profile)?runAssumeRole(credentials): runAssumeRole(credentials, defaultProfileCredentials);
