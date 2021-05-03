@@ -87,12 +87,12 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
                     console.log('stdout', stdout)
                     throw new Error(`${err}`)
                 }
-                if (stdout) {
-                    // console.log(`stderr: ${outputerr}`);
-                    console.log("\nif you think this is a bug, please add an issue in the github repo\n")
-
-                    throw new Error(stdout)
-                }
+                // if (stdout) {
+                //     // console.log(`stderr: ${outputerr}`);
+                //     console.log("\nif you think this is a bug, please add an issue in the github repo\n")
+                //     console.log('stdout', stdout)
+                //     // throw new Error(stdout)
+                // }
                 console.log(`output: ${stdout}`);
         
             }) 
