@@ -78,20 +78,22 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
             process.env['AWS_SESSION_TOKEN'] = `${data.Credentials.SessionToken}`
         
         
-            await exec(`${bashcommand}`,(err,output, outputerr)=>{
+            await exec(`${bashcommand}`,{},(err,stdout, stderr) => {
                 if (err) {
                     // console.log(`error: ${err.message}`);
                     console.log("\nif you think this is a bug, please add an issue in the github repo\n")
-
+                    console.log('err', err)
+                    console.log('stderr', stderr)
+                    console.log('stdout', stdout)
                     throw new Error(`${err}`)
                 }
-                if (outputerr) {
+                if (stdout) {
                     // console.log(`stderr: ${outputerr}`);
                     console.log("\nif you think this is a bug, please add an issue in the github repo\n")
 
-                    throw new Error(outputerr)
+                    throw new Error(stdout)
                 }
-                console.log(`output: ${output}`);
+                console.log(`output: ${stdout}`);
         
             }) 
     
