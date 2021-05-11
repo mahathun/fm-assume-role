@@ -54,7 +54,7 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
     if(!(role_arn || accountnumber || credentials.account_number || credentials.role_arn)){
         console.log('--role_arn or --accountnumber flags are required if the aws profile hasnt been specified or doesnt contain role_arn or account_number in there.')
         console.log("if you think this is a bug, please add an issue in the github repo")
-        return
+        throw new Error("--role_arn or --accountnumber flags are required if the aws profile hasnt been specified or doesnt contain role_arn or account_number in there.")
     }
 
     
@@ -86,6 +86,9 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
                     console.log('stderr', stderr)
                     console.log('stdout', stdout)
                     throw new Error(`${err}`)
+                }
+                if(stderr){
+                    throw new Error(`${stderr}`)
                 }
                 // if (stdout) {
                 //     // console.log(`stderr: ${outputerr}`);
