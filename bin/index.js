@@ -42,7 +42,7 @@ const checkUpdate = async () => {
 
 checkUpdate();
 
-const {role_arn, sessionname, duration, verbouse, role, accountnumber, bashcommand="", profile, v, dont_use_default_profile, h} = argv
+const {role_arn, sessionname, duration, verbose, role, accountnumber, bashcommand="", profile, v, dont_use_default_profile, h} = argv
 
 const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=>{
     const sts = (defaultProfileCredentials)?new AWS.STS({credentials: {
@@ -100,7 +100,7 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
         
             }) 
     
-            if(verbouse){
+            if(verbose){
                 console.log("if any issues manually COPY this and run to update the environment variables")
                 console.log(`export AWS_ACCESS_KEY_ID=${data.Credentials.AccessKeyId}; export AWS_SECRET_ACCESS_KEY=${data.Credentials.SecretAccessKey}; export AWS_SESSION_TOKEN=${data.Credentials.SessionToken}`)
             }else{
@@ -109,7 +109,7 @@ const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=
             }
         }else{
             console.log("Just paste and press enter");
-            if(verbouse){
+            if(verbose){
                 console.log("if any issues manually COPY this and run to update the environment variables")
                 console.log(`export AWS_ACCESS_KEY_ID=${data.Credentials.AccessKeyId}; export AWS_SECRET_ACCESS_KEY=${data.Credentials.SecretAccessKey}; export AWS_SESSION_TOKEN=${data.Credentials.SessionToken}`)
             }else{
@@ -126,7 +126,7 @@ if(h){
     console.log(`\t--role_arn\n\t\trole_arn which going to be assumed`)
     console.log(`\t--sessionname\n\t\tremote session name`)
     console.log(`\t--duration\n\t\tduration of the temporary tokens`)
-    console.log(`\t--verbouse\n\t\tprintout the temporary credentials to the terminal`)
+    console.log(`\t--verbose\n\t\tprintout the temporary credentials to the terminal`)
     console.log(`\t--role\n\t\trole name which will be assuming, default is temporary_access_to_devs`)
     console.log(`\t--accountnumber\n\t\taccount number of the account having the role to be assumed`)
     console.log(`\t--bashcommand\n\t\tbash command needed to run`)
