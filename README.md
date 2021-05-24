@@ -55,7 +55,7 @@ fm-assume-role
     --role_arn
     --sessionname
     --duration
-    --verbouse
+    --verbose
     --role
     --accountnumber
     --bashcommand
