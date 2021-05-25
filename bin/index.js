@@ -42,7 +42,7 @@ const checkUpdate = async () => {
 
 checkUpdate();
 
-const {role_arn, sessionname, duration, verbose, role, accountnumber, bashcommand="", profile, v, dont_use_default_profile, h} = argv
+const {role_arn, sessionname, duration, verbose, role, accountnumber, bashcommand="", profile, v, version, dont_use_default_profile, h} = argv
 
 const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=>{
     const sts = (defaultProfileCredentials)?new AWS.STS({credentials: {
@@ -132,12 +132,12 @@ if(h){
     console.log(`\t--bashcommand\n\t\tbash command needed to run`)
     console.log(`\t--profile\n\t\taws config profile name`)
     console.log(`\t--dont_use_default_profile\n\t\tuse to use the aws credentials of the current terminal instead of default profile`)
-    console.log(`\t--v\n\t\tprint out the fm-assume-role version`)
+    console.log(`\t--version\n\t\tprint out the fm-assume-role version`)
     console.log(`\t--h\n\t\thelp`)
     
     return;
 }
-if(v){
+if(v || version){
     console.log(`${pjson.name}\nVersion: ${pjson.version}`)
     return
 }

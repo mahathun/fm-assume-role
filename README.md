@@ -60,6 +60,7 @@ fm-assume-role
     --accountnumber
     --bashcommand
     --profile
+    --v || --version
 
 ```
 
