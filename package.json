@@ -1,6 +1,6 @@
 {
   "name": "fm-assume-role",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "This module makes a life a bit easier when working with AWS assume roles by adding an one line cli-interface to automatically allowing temporary credentials to work when doing deployment etc.",
   "main": "./bin/index.js",
   "homepage": "https://github.com/mahathun/fm-assume-role#readme",
