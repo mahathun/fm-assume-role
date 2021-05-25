@@ -42,7 +42,7 @@ const checkUpdate = async () => {
 
 checkUpdate();
 
-const {role_arn, sessionname, duration, verbose, role, accountnumber, bashcommand="", profile, v, version, dont_use_default_profile, h} = argv
+const {role_arn, sessionname, duration, verbose, role, accountnumber, bashcommand="", profile, v, version : packageVersion, dont_use_default_profile, h} = argv
 
 const runAssumeRole = async(credentials = {}, defaultProfileCredentials = null)=>{
     const sts = (defaultProfileCredentials)?new AWS.STS({credentials: {
@@ -137,7 +137,7 @@ if(h){
     
     return;
 }
-if(v || version){
+if(v || packageVersion){
     console.log(`${pjson.name}\nVersion: ${pjson.version}`)
     return
 }
